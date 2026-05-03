@@ -1,16 +1,21 @@
 class Pair < Formula
   desc "Neovim-backed input field for any TUI coding agent (Claude Code, Codex, Gemini)"
   homepage "https://github.com/xianxu/pair"
-  url "https://github.com/xianxu/pair/archive/refs/tags/v1.1.tar.gz"
-  sha256 "23dddc2c222049f410de183e1b09adba906aa512b68aac0c6fa97b9ccc0a8b2e"
+  url "https://github.com/xianxu/pair/archive/refs/tags/v1.2.tar.gz"
+  sha256 "8b78fd9087b118751511738530d175ce8232925bcdd76b59938ea3ea528b7db1"
   license "Apache-2.0"
-  version "1.1"
+  version "1.2"
 
   depends_on "zellij"
   depends_on "neovim"
   depends_on "fzf"
   depends_on "jq"
   depends_on "par"
+  # bin/pair-wrap is a Python PTY proxy (stdlib-only — no pip install).
+  # Homebrew has no "any python3" version-range syntax; pin to a specific
+  # python@3.X keg so PATH gets a python3. Any 3.x is fine at runtime —
+  # the shebang `#!/usr/bin/env python3` picks up whatever's on PATH.
+  depends_on "python@3.13"
 
   def install
     # Install the repo's bin/, nvim/, zellij/ trees verbatim under libexec.
