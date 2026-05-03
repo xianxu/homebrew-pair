@@ -1,10 +1,10 @@
 class Pair < Formula
   desc "Neovim-backed input field for any TUI coding agent (Claude Code, Codex, Gemini)"
   homepage "https://github.com/xianxu/pair"
-  url "https://github.com/xianxu/pair/archive/refs/tags/v1.tar.gz"
-  sha256 "2780260ddc08502967bde0cabe4d5232e1e5526e6157bee571cb8209104d256b"
+  url "https://github.com/xianxu/pair/archive/refs/tags/v1.1.tar.gz"
+  sha256 "23dddc2c222049f410de183e1b09adba906aa512b68aac0c6fa97b9ccc0a8b2e"
   license "Apache-2.0"
-  version "1"
+  version "1.1"
 
   depends_on "zellij"
   depends_on "neovim"
@@ -33,8 +33,8 @@ class Pair < Formula
         npm install -g @openai/codex
         # gemini-cli per Google instructions
 
-      Drafts and prompt history live in ~/scratch/. The internal quit-marker
-      cache is at ~/.cache/pair/.
+      Drafts and prompt history live under ${XDG_DATA_HOME:-~/.local/share}/pair/.
+      Internal caches (quit marker, clipboard debug log) live under ~/.cache/pair/.
 
       Run `pair --help` for keybindings.
     EOS
