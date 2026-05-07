@@ -1,10 +1,10 @@
 class Pair < Formula
   desc "Neovim-backed input field for any TUI coding agent (Claude Code, Codex, Gemini)"
   homepage "https://github.com/xianxu/pair"
-  url "https://github.com/xianxu/pair/archive/refs/tags/v1.11.tar.gz"
-  sha256 "c7ea56ec2e950465e75292a31e55ffbca41bfdf8ea9c0d19ecf60e1e4a44ca3d"
+  url "https://github.com/xianxu/pair/archive/refs/tags/v1.12.tar.gz"
+  sha256 "9523478a6b3fe91a1d5be7ce27a48b2e19cf7e7d4e784f8da21b1b78ada1c51b"
   license "Apache-2.0"
-  version "1.11"
+  version "1.12"
 
   depends_on "zellij"
   depends_on "neovim"
