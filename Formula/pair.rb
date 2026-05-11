@@ -3,10 +3,10 @@ class Pair < Formula
 
   desc "Neovim-backed input field for any TUI coding agent (Claude Code, Codex, Gemini)"
   homepage "https://github.com/xianxu/pair"
-  url "https://github.com/xianxu/pair/archive/refs/tags/v1.16.tar.gz"
-  sha256 "ded4d06cd6b240e2bf26704d35771a558febfdc2e0b751013dc1b83e9b9bbdf1"
+  url "https://github.com/xianxu/pair/archive/refs/tags/v1.17.tar.gz"
+  sha256 "ab91a7778d0f49fbac8aebb450a32b1b3ff23b44b674e7ea6d78e967f692c2c7"
   license "Apache-2.0"
-  version "1.16"
+  version "1.17"
 
   # Go is build-only — the cmd/* binaries it produces are static, no
   # Go runtime needed at execution time. First install pulls Go (~150
@@ -50,15 +50,19 @@ class Pair < Formula
 
     # Build Go binaries from cmd/ into the same libexec/bin/ directory
     # the shell scripts now live in. pair-scrollback-open's prefer-Go
-    # branch looks for $PAIR_HOME/bin/scrollback-render; zellij's
+    # branch looks for $PAIR_HOME/bin/pair-scrollback-render; zellij's
     # PATH-based `exec pair-wrap …` finds libexec/bin/pair-wrap via
     # the bin.install_symlink-rooted PATH the launcher sets up.
     #
     # -trimpath strips host-specific paths from the binary, making the
     # output reproducible across machines and not leaking build-host
     # directory names.
+    #
+    # pair-scribe (cmd/pair-scribe) is intentionally NOT built here —
+    # it's user shell tooling, not pair runtime. Users install it via
+    # `make install` from a checkout.
     ENV["GOFLAGS"] = "-trimpath -mod=readonly"
-    %w[pair-wrap scrollback-render].each do |b|
+    %w[pair-wrap pair-scrollback-render].each do |b|
       system "go", "build", "-o", libexec/"bin/#{b}", "./cmd/#{b}"
     end
 
