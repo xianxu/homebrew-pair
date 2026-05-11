@@ -3,21 +3,27 @@ class Pair < Formula
 
   desc "Neovim-backed input field for any TUI coding agent (Claude Code, Codex, Gemini)"
   homepage "https://github.com/xianxu/pair"
-  url "https://github.com/xianxu/pair/archive/refs/tags/v1.15.tar.gz"
-  sha256 "d57b64b16a775d782cc9120554e0f2bfd39b7f2d5189f207e57f30708f2924ae"
+  url "https://github.com/xianxu/pair/archive/refs/tags/v1.16.tar.gz"
+  sha256 "ded4d06cd6b240e2bf26704d35771a558febfdc2e0b751013dc1b83e9b9bbdf1"
   license "Apache-2.0"
-  version "1.15"
+  version "1.16"
 
-  depends_on "zellij"
-  depends_on "neovim"
+  # Go is build-only — the cmd/* binaries it produces are static, no
+  # Go runtime needed at execution time. First install pulls Go (~150
+  # MB); subsequent installs use the cached toolchain.
+  depends_on "go" => :build
+
   depends_on "fzf"
   depends_on "jq"
+  depends_on "neovim"
   depends_on "par"
-  # python@3 hosts both pair-wrap (PTY proxy, stdlib-only) and the
-  # private venv built below for pair-scrollback-render's pyte dep.
-  # `python@3` is Homebrew's alias for the current default python@3.X
-  # keg and auto-follows bumps.
+  # python@3 hosts the legacy bin/pair-wrap.py and the private venv
+  # below for pair-scrollback-render's pyte dep. Both are fallbacks
+  # behind the Go binaries built in install(); kept during the soak
+  # window tracked by pair issue #19, after which python@3 and the
+  # pyte/wcwidth resources can drop.
   depends_on "python@3"
+  depends_on "zellij"
 
   # pair-scrollback-render (Alt+/ viewer) depends on pyte. Vendoring
   # via Homebrew's resource pattern keeps `brew install pair` turnkey
@@ -42,11 +48,26 @@ class Pair < Formula
     libexec.install "nvim"
     libexec.install "zellij"
 
-    # Build a private venv at libexec/venv/ for pyte (and any future
-    # Python deps). pair-scrollback-open detects this venv via
-    # $PAIR_HOME/venv/bin/python3 and prefers it over the system
-    # python3. Falls back to system python3 + user-installed pyte for
-    # the git-clone path.
+    # Build Go binaries from cmd/ into the same libexec/bin/ directory
+    # the shell scripts now live in. pair-scrollback-open's prefer-Go
+    # branch looks for $PAIR_HOME/bin/scrollback-render; zellij's
+    # PATH-based `exec pair-wrap …` finds libexec/bin/pair-wrap via
+    # the bin.install_symlink-rooted PATH the launcher sets up.
+    #
+    # -trimpath strips host-specific paths from the binary, making the
+    # output reproducible across machines and not leaking build-host
+    # directory names.
+    ENV["GOFLAGS"] = "-trimpath -mod=readonly"
+    %w[pair-wrap scrollback-render].each do |b|
+      system "go", "build", "-o", libexec/"bin/#{b}", "./cmd/#{b}"
+    end
+
+    # Build a private venv at libexec/venv/ for pyte. Now a fallback
+    # behind the Go scrollback-render; pair-scrollback-open prefers
+    # the Go path and falls through to $PAIR_HOME/venv/bin/python3 +
+    # libexec/bin/pair-scrollback-render only if the Go binary is
+    # missing. Once issue #19 lands, this block + the resources + the
+    # python@3 dep all drop.
     venv = virtualenv_create(libexec/"venv", "python3")
     venv.pip_install resources
 
