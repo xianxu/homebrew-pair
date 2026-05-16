@@ -3,10 +3,10 @@ class Pair < Formula
 
   desc "Neovim-backed input field for any TUI coding agent (Claude Code, Codex, Gemini)"
   homepage "https://github.com/xianxu/pair"
-  url "https://github.com/xianxu/pair/archive/refs/tags/v1.17.tar.gz"
-  sha256 "ab91a7778d0f49fbac8aebb450a32b1b3ff23b44b674e7ea6d78e967f692c2c7"
+  url "https://github.com/xianxu/pair/archive/refs/tags/v1.18.tar.gz"
+  sha256 "05aa43455268096b69eafbef688575d23cdc5c7fb2aef8f00c1e5e11c2eca881"
   license "Apache-2.0"
-  version "1.17"
+  version "1.18"
 
   # Go is build-only — the cmd/* binaries it produces are static, no
   # Go runtime needed at execution time. First install pulls Go (~150
